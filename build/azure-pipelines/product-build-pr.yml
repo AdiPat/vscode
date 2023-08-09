@@ -96,7 +96,7 @@ jobs:
 
     - job: Windowsx64UnitTests
       displayName: Windows (Unit Tests)
-      pool: 1es-oss-windows-2022-x64
+      pool: 1es-oss-windows-2019-x64
       timeoutInMinutes: 30
       variables:
         VSCODE_ARCH: x64
@@ -105,6 +105,7 @@ jobs:
         - template: win32/product-build-win32.yml
           parameters:
             VSCODE_QUALITY: ${{ variables.VSCODE_QUALITY }}
+            VSCODE_ARCH: x64
             VSCODE_CIBUILD: ${{ variables.VSCODE_CIBUILD }}
             VSCODE_RUN_UNIT_TESTS: true
             VSCODE_RUN_INTEGRATION_TESTS: false
@@ -112,7 +113,7 @@ jobs:
 
     - job: Windowsx64IntegrationTests
       displayName: Windows (Integration Tests)
-      pool: 1es-oss-windows-2022-x64
+      pool: 1es-oss-windows-2019-x64
       timeoutInMinutes: 30
       variables:
         VSCODE_ARCH: x64
@@ -121,6 +122,7 @@ jobs:
         - template: win32/product-build-win32.yml
           parameters:
             VSCODE_QUALITY: ${{ variables.VSCODE_QUALITY }}
+            VSCODE_ARCH: x64
             VSCODE_CIBUILD: ${{ variables.VSCODE_CIBUILD }}
             VSCODE_RUN_UNIT_TESTS: false
             VSCODE_RUN_INTEGRATION_TESTS: true
@@ -128,7 +130,7 @@ jobs:
 
     # - job: Windowsx64SmokeTests
     #   displayName: Windows (Smoke Tests)
-    #   pool: 1es-oss-windows-2022-x64
+    #   pool: 1es-oss-windows-2019-x64
     #   timeoutInMinutes: 30
     #   variables:
     #     VSCODE_ARCH: x64
@@ -137,6 +139,7 @@ jobs:
     #     - template: win32/product-build-win32.yml
     #       parameters:
     #         VSCODE_QUALITY: ${{ variables.VSCODE_QUALITY }}
+    #         VSCODE_ARCH: x64
     #         VSCODE_RUN_UNIT_TESTS: false
     #         VSCODE_RUN_INTEGRATION_TESTS: false
     #         VSCODE_RUN_SMOKE_TESTS: true
@@ -153,7 +156,7 @@ jobs:
 
     - job: Windowsx64MaintainNodeModulesCache
       displayName: Windows (Maintain node_modules cache)
-      pool: 1es-oss-windows-2022-x64
+      pool: 1es-oss-windows-2019-x64
       timeoutInMinutes: 30
       variables:
         VSCODE_ARCH: x64

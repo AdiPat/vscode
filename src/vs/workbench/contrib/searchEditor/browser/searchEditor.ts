@@ -10,7 +10,7 @@ import { Delayer } from 'vs/base/common/async';
 import { CancellationToken } from 'vs/base/common/cancellation';
 import { KeyCode, KeyMod } from 'vs/base/common/keyCodes';
 import { DisposableStore } from 'vs/base/common/lifecycle';
-import { assertIsDefined, withNullAsUndefined } from 'vs/base/common/types';
+import { assertIsDefined } from 'vs/base/common/types';
 import { URI } from 'vs/base/common/uri';
 import 'vs/css!./media/searchEditor';
 import { ICodeEditorWidgetOptions } from 'vs/editor/browser/widget/codeEditorWidget';
@@ -357,8 +357,8 @@ export class SearchEditor extends AbstractTextCodeEditor<SearchEditorViewState> 
 		this.queryEditorWidget.modifyContextLines(increase);
 	}
 
-	toggleQueryDetails() {
-		this.toggleIncludesExcludes();
+	toggleQueryDetails(shouldShow?: boolean) {
+		this.toggleIncludesExcludes(shouldShow);
 	}
 
 	deleteResultBlock() {
@@ -494,7 +494,13 @@ export class SearchEditor extends AbstractTextCodeEditor<SearchEditorViewState> 
 			matchWholeWord: this.queryEditorWidget.searchInput?.getWholeWords() ?? false,
 			useExcludeSettingsAndIgnoreFiles: this.inputPatternExcludes.useExcludesAndIgnoreFiles(),
 			onlyOpenEditors: this.inputPatternIncludes.onlySearchInOpenEditors(),
-			showIncludesExcludes: this.showingIncludesExcludes
+			showIncludesExcludes: this.showingIncludesExcludes,
+			notebookSearchConfig: {
+				includeMarkupInput: this.queryEditorWidget.getNotebookFilters().markupInput,
+				includeMarkupPreview: this.queryEditorWidget.getNotebookFilters().markupPreview,
+				includeCodeInput: this.queryEditorWidget.getNotebookFilters().codeInput,
+				includeOutput: this.queryEditorWidget.getNotebookFilters().codeOutput,
+			}
 		};
 	}
 
@@ -524,7 +530,7 @@ export class SearchEditor extends AbstractTextCodeEditor<SearchEditorViewState> 
 		const options: ITextQueryBuilderOptions = {
 			_reason: 'searchEditor',
 			extraFileResources: this.instantiationService.invokeFunction(getOutOfWorkspaceEditorResources),
-			maxResults: withNullAsUndefined(this.searchConfig.maxResults),
+			maxResults: this.searchConfig.maxResults ?? undefined,
 			disregardIgnoreFiles: !config.useExcludeSettingsAndIgnoreFiles || undefined,
 			disregardExcludeSettings: !config.useExcludeSettingsAndIgnoreFiles || undefined,
 			excludePattern: config.filesToExclude,
@@ -537,7 +543,13 @@ export class SearchEditor extends AbstractTextCodeEditor<SearchEditorViewState> 
 			afterContext: config.contextLines,
 			beforeContext: config.contextLines,
 			isSmartCase: this.searchConfig.smartCase,
-			expandPatterns: true
+			expandPatterns: true,
+			notebookSearchConfig: {
+				includeMarkupInput: config.notebookSearchConfig.includeMarkupInput,
+				includeMarkupPreview: config.notebookSearchConfig.includeMarkupPreview,
+				includeCodeInput: config.notebookSearchConfig.includeCodeInput,
+				includeOutput: config.notebookSearchConfig.includeOutput,
+			}
 		};
 
 		const folderResources = this.contextService.getWorkspace().folders;
